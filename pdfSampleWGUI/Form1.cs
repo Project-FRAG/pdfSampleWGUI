@@ -1,19 +1,16 @@
-﻿using System;
+﻿using Aspose.Pdf.Text;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Document = Aspose.Pdf.Document;
 
 namespace pdfSampleWGUI
 {
     public partial class Form1 : Form
     {
-        Aspose.Pdf.Document pdf;
-        Aspose.Pdf.Text.TextFragmentCollection fragments;
+        Document pdf;
+        TextFragmentCollection fragments;
         List<TextBox> boxes;
         public Form1()
         {
@@ -26,7 +23,10 @@ namespace pdfSampleWGUI
             if(openFileDialog1.FileName != "" && openFileDialog1.FileName.EndsWith(".pdf"))
             {
                 pdf = new Aspose.Pdf.Document(openFileDialog1.FileName);
-                var textFragmentAbsorberAddress = new Aspose.Pdf.Text.TextFragmentAbsorber();
+                var searchOption = new TextSearchOptions(false);
+                searchOption.SearchForTextRelatedGraphics = true;
+                var textFragmentAbsorberAddress = new TextFragmentAbsorber();
+                textFragmentAbsorberAddress.TextSearchOptions = searchOption;
                 pdf.Pages[1].Accept(textFragmentAbsorberAddress);
                 fragments = textFragmentAbsorberAddress.TextFragments;
                 int i = 0;
@@ -56,7 +56,7 @@ namespace pdfSampleWGUI
         private void Under_CheckedChanged(object sender, EventArgs e)
         {
             var checkbox = (CheckBox)sender;
-            var frag = fragments.ElementAt(Int32.Parse(checkbox.Name));
+            var frag =  fragments.ElementAt(Int32.Parse(checkbox.Name));
             frag.TextState.Underline = checkbox.Checked;
         }
 
